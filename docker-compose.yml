@@ -1,0 +1,30 @@
+services:
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - orch-local
+
+  orch-db:
+    container_name: orch-core-db
+    image: postgres:12.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - orch_core_data:/var/lib/postgresql/data
+      - ./create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+    networks:
+      - orch-local
+
+volumes:
+  orch_core_data:
+
+networks:
+  orch-local:
+    name: orch-local

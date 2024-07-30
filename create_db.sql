@@ -1,0 +1,7 @@
+CREATE USER nwa
+WITH
+  SUPERUSER;
+
+ALTER USER nwa PASSWORD 'nwa';
+
+CREATE DATABASE "orchestrator-core" OWNER nwa;
