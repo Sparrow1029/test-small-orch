@@ -4,6 +4,7 @@ from pathlib import Path
 
 from orchestrator.domain.base import ProductBlockModel
 from orchestrator.types import SubscriptionLifecycle
+from pydantic import field_serializer
 
 
 class CalculationBlockInactive(
@@ -13,7 +14,11 @@ class CalculationBlockInactive(
 ):
     engine: str | None = None
     calculation_id: UUID | None = None
-    script_path: Path | None = None
+    script_path: str | None = None
+
+    @field_serializer("script_path", when_used="json-unless-none")
+    def serialize_script_path(script_path: Path) -> str:
+        return str(script_path)
 
 
 class CalculationBlock(
@@ -21,4 +26,4 @@ class CalculationBlock(
 ):
     engine: str
     calculation_id: UUID
-    script_path: Path
+    script_path: str

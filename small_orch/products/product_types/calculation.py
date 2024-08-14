@@ -1,3 +1,4 @@
+# type: ignore
 from orchestrator.domain.base import SubscriptionModel
 from orchestrator.types import SubscriptionLifecycle
 from ..product_blocks.calculation import CalculationBlockInactive, CalculationBlock
@@ -8,10 +9,10 @@ class CalculationInactive(SubscriptionModel, is_base=True):
 
 
 class CalculationProvisioning(
-    SubscriptionModel, lifecycle=[SubscriptionLifecycle.PROVISIONING]
+    CalculationInactive, lifecycle=[SubscriptionLifecycle.PROVISIONING]
 ):
     calculation: CalculationBlockInactive
 
 
-class CalculationActive(SubscriptionModel, lifecycle=[SubscriptionLifecycle.ACTIVE]):
+class Calculation(CalculationProvisioning, lifecycle=[SubscriptionLifecycle.ACTIVE]):
     calculation: CalculationBlock

@@ -17,14 +17,44 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - orch_core_data:/var/lib/postgresql/data
-      - ./create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+      - orch-db-data:/var/lib/postgresql/data
+      - ./docker/create_db.sql:/docker-entrypoint-initdb.d/create_db.sql
+    networks:
+      - orch-local
+
+  orch-ui:
+    container_name: orch-ui
+    image: ghcr.io/workfloworchestrator/example-orchestrator-ui:latest
+    env_file: ./docker/orch-ui.env
+    ports:
+      - 3000:3000
+    networks:
+      - orch-local
+    depends_on:
+      orch-backend:
+        condition: service_started
+
+  orch-backend:
+    container_name: orch-backend
+    image: small-orch:latest
+    build:
+      context: .
+    volumes:
+      - ./small_orch:/usr/src/app/small_orch
+    env_file: ./docker/orch-backend.env
+    ports:
+      - 8080:8080
+    # command: python
+    depends_on:
+      orch-db:
+        condition: service_started
     networks:
       - orch-local
 
 volumes:
-  orch_core_data:
+  orch-db-data:
+    name: small-orch-db-data
 
 networks:
   orch-local:
-    name: orch-local
+    name: small-orch-local

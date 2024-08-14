@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "test-small-orch"
+version = "0.1.0"
+description = "Small example testing SURF WFO library"
+authors = ["Alexander Ray <awray2@es.net>"]
+license = "Apache License 2.0"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.11,<3.13"
+orchestrator-core = { version = ">=2.7.3,<2.8.0", extras = ["celery"] }
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
