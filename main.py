@@ -1,13 +1,16 @@
 from pathlib import Path
-from celery import Celery
-from orchestrator.services.tasks import initialise_celery
-import strawberry
 from typing import NewType
-from orchestrator import OrchestratorCore, app_settings
-from orchestrator.graphql import SCALAR_OVERRIDES
+
+import strawberry
+from celery import Celery
 from oauth2_lib.settings import oauth2lib_settings
+from orchestrator import OrchestratorCore
 from orchestrator.cli.main import app as core_cli
+from orchestrator.graphql import SCALAR_OVERRIDES
+from orchestrator.services.tasks import initialise_celery
 from structlog import get_logger
+
+from small_orch.settings import app_settings
 
 logger = get_logger(__name__)
 
@@ -22,8 +25,10 @@ UPDATED_SCALAR_OVERRIDES = SCALAR_OVERRIDES | {Path: PathType}
 
 
 def init_app():
-    from small_orch import products  # noqa: F401
-    from small_orch import workflows  # noqa: F401
+    from small_orch import (
+        products,  # noqa: F401
+        workflows,  # noqa: F401
+    )
 
 
 app = OrchestratorCore(base_settings=app_settings)

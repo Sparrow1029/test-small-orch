@@ -4,6 +4,7 @@ x-common-orch-config: &orch-common
     context: .
   volumes:
     - ./small_orch:/usr/src/app/small_orch
+    - ./scripts:/usr/src/app/scripts
   env_file: ./docker/orch-backend.env
   depends_on:
     orch-db:

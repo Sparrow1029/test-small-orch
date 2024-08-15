@@ -3,7 +3,6 @@ from typing import TypeAlias, cast
 
 from orchestrator import step, begin
 from orchestrator.types import State, SubscriptionLifecycle, UUIDstr
-from orchestrator.settings import app_settings
 from orchestrator.workflow import StepList
 from orchestrator.workflows.utils import create_workflow
 from orchestrator.workflows.steps import set_status
@@ -11,21 +10,18 @@ from pydantic import ConfigDict
 from pydantic_forms.types import FormGenerator
 from pydantic_forms.validators import Choice
 from pydantic_forms.core import FormPage
+from small_orch.settings import app_settings
 from structlog import get_logger
 
 from small_orch.products.product_types.calculation import CalculationInactive
 
 logger = get_logger(__name__)
 
-# This would likely be a pathlib.Path.iterdir() from somewhere on the server where the scripts are stored
-# or similar dynamic fetching
-SCRIPTS = [
-    "/usr/local/bin/scripts/my_script.sh",
-    "/usr/local/bin/scripts/other_script.sh",
-]
+SCRIPTS = [str(p) for p in app_settings.SCRIPTS_DIR.iterdir()]
 
 
 class EngineEnum(Choice):
+    bash = "bash"
     pytorch = "pytorch"
     tensorflow = "tensorflow"
 
@@ -37,7 +33,7 @@ def initial_input_form_generator(workflow_name: str) -> FormGenerator:
         model_config = ConfigDict(title=" ".join(workflow_name.split("_")).title())
 
         script_choice: ScriptChoice
-        engine_choice: EngineEnum = EngineEnum.pytorch
+        engine_choice: EngineEnum = EngineEnum.bash
         calculation_name: str
 
     logger.info("## SCHEMA: ", schema=CreateCalculationForm.model_json_schema())
@@ -61,9 +57,7 @@ def construct_model(
 
     subscription.calculation.script_path = str(script_choice)
     subscription.calculation.engine = engine_choice
-    subscription.calculation.calculation_id = (
-        subscription.calculation.subscription_instance_id
-    )
+    subscription.calculation.calculation_id = subscription.calculation.subscription_instance_id
 
     return {"subscription": subscription}
 

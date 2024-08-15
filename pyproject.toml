@@ -16,3 +16,7 @@ orchestrator-core = { version = ">=2.7.3,<2.8.0", extras = ["celery"] }
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.black]
+line-length = 100
