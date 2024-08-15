@@ -1,3 +1,16 @@
+x-common-orch-config: &orch-common
+  image: small-orch:latest
+  build:
+    context: .
+  volumes:
+    - ./small_orch:/usr/src/app/small_orch
+  env_file: ./docker/orch-backend.env
+  depends_on:
+    orch-db:
+      condition: service_started
+  networks:
+    - orch-local
+
 services:
   redis:
     container_name: redis
@@ -35,21 +48,24 @@ services:
         condition: service_started
 
   orch-backend:
+    <<: *orch-common
     container_name: orch-backend
-    image: small-orch:latest
-    build:
-      context: .
-    volumes:
-      - ./small_orch:/usr/src/app/small_orch
-    env_file: ./docker/orch-backend.env
     ports:
       - 8080:8080
-    # command: python
+    environment:
+      EXECUTOR: ${EXECUTOR:-celery}
+
+  orch-celery-worker:
+    <<: *orch-common
+    container_name: orch-celery-worker
+    command:
+      - watchfiles
+      - --filter
+      - python
+      - --
+      - "celery -A small_orch.celery_worker worker -E -l INFO -Q new_tasks,resume_tasks,new_workflows,resume_workflows --concurrency=1"
     depends_on:
-      orch-db:
-        condition: service_started
-    networks:
-      - orch-local
+      - orch-backend
 
 volumes:
   orch-db-data:

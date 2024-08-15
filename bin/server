@@ -1,6 +1,6 @@
 #!/bin/sh
 COMMAND='uvicorn --proxy-headers --workers 4 --host 0.0.0.0 --port 8080 --reload --reload-dir small_orch/'
-echo "Starting server in $PWD"
+echo "Starting server in ${PWD}"
 echo "Command: ${COMMAND}"
 
 PYTHONPATH=.
