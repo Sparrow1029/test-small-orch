@@ -2,6 +2,7 @@ x-common-orch-config: &orch-common
   image: small-orch:latest
   build:
     context: .
+    target: dev
   volumes:
     - ./small_orch:/usr/src/app/small_orch
     - ./scripts:/usr/src/app/scripts
@@ -39,6 +40,8 @@ services:
   orch-ui:
     container_name: orch-ui
     image: ghcr.io/workfloworchestrator/example-orchestrator-ui:latest
+    build:
+      context: ../../../surf/orchestrator-ui-library/apps/wfo-ui
     env_file: ./docker/orch-ui.env
     ports:
       - 3000:3000

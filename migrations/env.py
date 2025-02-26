@@ -1,9 +1,7 @@
 import logging
-import os
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-import orchestrator
 from orchestrator.db.database import BaseModel
 from orchestrator.settings import app_settings
 

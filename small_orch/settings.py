@@ -1,6 +1,5 @@
 from pathlib import Path
 from orchestrator.settings import AppSettings as OrchCoreSettings
-from oauth2_lib.settings import Oauth2LibSettings
 
 
 class AppSettings(OrchCoreSettings):

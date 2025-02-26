@@ -1,22 +1,15 @@
-[tool.poetry]
+[project]
+authors = [{ name = "Alexander Ray", email = "awray2@es.net" }]
+license = { text = "Apache License 2.0" }
+requires-python = "<3.13,>=3.11"
+dependencies = ["orchestrator-core[celery]<3.0.0,>=2.7.3", "uvicorn>=0.32.1"]
 name = "test-small-orch"
 version = "0.1.0"
 description = "Small example testing SURF WFO library"
-authors = ["Alexander Ray <awray2@es.net>"]
-license = "Apache License 2.0"
 readme = "README.md"
-# packages = [{ include = "small_orch" }]
-package-mode = false
 
-[tool.poetry.dependencies]
-python = ">=3.11,<3.13"
-orchestrator-core = { version = ">=2.7.3,<3.0.0", extras = ["celery"] }
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
+[tool.uv]
+dev-dependencies = ["black>=25.1.0", "ruff>=0.9.7"]
 
 [tool.black]
 line-length = 100
